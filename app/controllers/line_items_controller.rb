@@ -27,7 +27,6 @@ class LineItemsController < ApplicationController
   # POST /line_items.json
   def create
     product = Product.find(params[:product_id])
-    # 下面写法等同于 @line_item = LineItem.new(cart: @cart, product: product)
     @line_item = @cart.add_product(product)
 
     session[:visit_counter] = 0
@@ -35,7 +34,7 @@ class LineItemsController < ApplicationController
     respond_to do |format|
       if @line_item.save
         # @line_item.cart 指向了 /carts/:id(.:format)，即触发了 carts#show 方法
-        format.html { redirect_to @line_item.cart, notice: 'Line item was successfully created.' }
+        format.html { redirect_to @line_item.cart }
         format.json { render :show, status: :created, location: @line_item }
       else
         format.html { render :new }
@@ -76,6 +75,6 @@ class LineItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def line_item_params
-      params.require(:line_item).permit(:product_id, :cart_id)
+      params.require(:line_item).permit(:product_id)
     end
 end
