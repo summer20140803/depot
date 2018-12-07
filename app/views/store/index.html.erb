@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Your Pragmatic Catalog</h1>
+
+<div><%= "当前主页无效访问次数：#{@visit_counter}" %></div>
+
+<!--cache用于实现俄罗斯套娃页面缓存，如果没有修改视图模板本身，就不会触发更新-->
+<% cache @products do %>
+  <% @products.each do |product| %>
+    <% cache product do %>
+      <div class="entry">
+        <%= image_tag(product.image_url) %>
+        <h3><%= product.title %></h3>
+        <!--    sanitize用于净化不在白名单中的所有HTML标签-->
+        <!--    可通过 sanitize @comment.body, tags: %w(strong em a), attributes: %w(href) 定制过滤白名单-->
+        <%= sanitize(product.description) %>
+        <div class="price_line">
+          <span class="price"><%= number_to_currency(product.price) %></span>
+          <%= button_to 'Add to cart', line_items_path(product_id: product.id) %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+
