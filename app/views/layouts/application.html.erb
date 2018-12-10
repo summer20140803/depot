@@ -1,36 +1,42 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Depot</title>
-<!--    通过设置隐藏数据来防止跨站请求伪造(CSRF)攻击，这一特性对于表单特别重要。-->
-    <%= csrf_meta_tags %>
-<!--    返回元标记“csp-nonce”，其中包含每个会话的nonce值，以允许内联<script>标记。
-        Rails UJS帮助程序使用它来创建动态加载的内联<script>元素。-->
-    <%= csp_meta_tag %>
-<!--    用于生成包含应用样式表的<link>标签，并通过选项启动了Turbolinks，Turbolinks在后台工作，可以提高应用的页面加载速度。-->
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-<!--    用于生成加载应用JavaScript脚本的<script>标签-->
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+<head>
+  <title>Depot</title>
+  <!--    通过设置隐藏数据来防止跨站请求伪造(CSRF)攻击，这一特性对于表单特别重要。-->
+  <%= csrf_meta_tags %>
+  <!--    返回元标记“csp-nonce”，其中包含每个会话的nonce值，以允许内联<script>标记。
+          Rails UJS帮助程序使用它来创建动态加载的内联<script>元素。-->
+  <%= csp_meta_tag %>
+  <!--    用于生成包含应用样式表的<link>标签，并通过选项启动了Turbolinks，Turbolinks在后台工作，可以提高应用的页面加载速度。-->
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <!--    用于生成加载应用JavaScript脚本的<script>标签-->
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
 
-  <body class='<%= controller.controller_name %>'>
-    <div id="banner">
-      <%= image_tag 'logo.svg', alt: 'The Pragmatic BookShelf' %>
-      <span class="title"><%= @page_title %></span>
-    </div>
-    <div id="columns">
-      <div id="side">
-        <ul>
-          <li><a href="http://localhost:3000/">Home</a></li>
-          <li><a href="https://www.baidu.com">Questions</a></li>
-          <li><a href="https://www.baidu.com">News</a></li>
-          <li><a href="https://www.baidu.com">Contact</a></li>
-        </ul>
-      </div>
+<body class='<%= controller.controller_name %>'>
+<div id="banner">
+  <%= image_tag 'logo.svg', alt: 'The Pragmatic BookShelf' %>
+  <span class="title"><%= @page_title %></span>
+</div>
+<div id="columns">
+  <div id="side">
+    <% if @cart %>
+      <%= hidden_div_if(@cart.line_items.empty?, id: 'cart') do %>
+<!--        渲染_cart.html.erb局部视图-->
+        <%= render @cart %>
+      <% end %>
+    <% end %>
+    <ul>
+      <li><a href="http://localhost:3000/">Home</a></li>
+      <li><a href="https://www.baidu.com">Questions</a></li>
+      <li><a href="https://www.baidu.com">News</a></li>
+      <li><a href="https://www.baidu.com">Contact</a></li>
+    </ul>
+  </div>
 
-      <div id="main">
-        <%= yield %>
-      </div>
-    </div>
-  </body>
+  <div id="main">
+    <%= yield %>
+  </div>
+</div>
+</body>
 </html>

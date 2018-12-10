@@ -1,0 +1,11 @@
+<!--如果购物车商品从无到有，则购物车以平滑的动画显示出来-->
+if ($('#cart tr').length == 1) {
+    $('#cart').show('blind', 1000);
+}
+
+<!--使用Ajax来更新购物车视图，从而避免重新刷新整个页面-->
+<!--j()方法负责把Ruby代码转换为JavaScript代码-->
+$('#cart').html("<%= j(render @cart) %>");
+
+<!--使更新后的商品高亮显示-->
+$('#current_item').css({'background-color':'#88ff88'}).animate({'background-color':'#114411'}, 1000);
