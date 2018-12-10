@@ -1,0 +1,3 @@
+<!--使用Ajax来更新购物车视图，从而避免重新刷新整个页面-->
+<!--j()方法负责把Ruby代码转换为JavaScript代码-->
+$('#cart').html("<%= j(render @cart) %>");

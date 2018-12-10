@@ -1,7 +1,7 @@
 class LineItemsController < ApplicationController
   include CurrentCart
   before_action :set_cart, only: [:create]
-  before_action :set_line_item, only: [:show, :edit, :update, :destroy]
+  before_action :set_line_item, only: [:show, :edit, :update, :destroy, :decrease_quantity]
 
   # GET /line_items
   # GET /line_items.json
@@ -33,13 +33,13 @@ class LineItemsController < ApplicationController
 
     respond_to do |format|
       if @line_item.save
-        format.html { redirect_to store_index_url }
+        format.html {redirect_to store_index_url}
         # 默认触发views/line_items/create.js.erb
-        format.js   { @current_item = @line_item }
-        format.json { render :show, status: :created, location: @line_item }
+        format.js {@current_item = @line_item}
+        format.json {render :show, status: :created, location: @line_item}
       else
-        format.html { render :new }
-        format.json { render json: @line_item.errors, status: :unprocessable_entity }
+        format.html {render :new}
+        format.json {render json: @line_item.errors, status: :unprocessable_entity}
       end
     end
   end
@@ -49,11 +49,11 @@ class LineItemsController < ApplicationController
   def update
     respond_to do |format|
       if @line_item.update(line_item_params)
-        format.html { redirect_to @line_item, notice: 'Line item was successfully updated.' }
-        format.json { render :show, status: :ok, location: @line_item }
+        format.html {redirect_to @line_item, notice: 'Line item was successfully updated.'}
+        format.json {render :show, status: :ok, location: @line_item}
       else
-        format.html { render :edit }
-        format.json { render json: @line_item.errors, status: :unprocessable_entity }
+        format.html {render :edit}
+        format.json {render json: @line_item.errors, status: :unprocessable_entity}
       end
     end
   end
@@ -63,19 +63,43 @@ class LineItemsController < ApplicationController
   def destroy
     @line_item.destroy
     respond_to do |format|
-      format.html { redirect_to store_index_url }
-      format.json { head :no_content }
+      format.html {redirect_to store_index_url}
+      format.json {head :no_content}
+    end
+  end
+
+  def decrease_quantity
+    @line_item.quantity -= 1
+    if @line_item.quantity == 0
+      @line_item.destroy
+      respond_to do |format|
+        format.html {redirect_to store_index_url}
+        # 默认触发views/line_items/decrease_quantity.js.erb
+        format.js
+        format.json {head :no_content}
+      end
+    else
+      respond_to do |format|
+        if @line_item.update({quantity: @line_item.quantity})
+          format.html {redirect_to store_index_url}
+          format.json {render :show, status: :ok, location: @line_item}
+        else
+          format.html {render :edit}
+          format.json {render json: @line_item.errors, status: :unprocessable_entity}
+        end
+      end
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_line_item
-      @line_item = LineItem.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def line_item_params
-      params.require(:line_item).permit(:product_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_line_item
+    @line_item = LineItem.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def line_item_params
+    params.require(:line_item).permit(:product_id)
+  end
 end
