@@ -8,6 +8,7 @@ class Cart < ApplicationRecord
     else
       # 下面的方法等同于 current_item = LineItem.new(product_id: product.id, cart_id: self.id)
       current_item = self.line_items.build(product_id: product.id)
+      current_item.price = product.price
     end
     current_item
   end

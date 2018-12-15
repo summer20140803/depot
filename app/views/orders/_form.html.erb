@@ -1,0 +1,39 @@
+<!--form_with表单生成辅助方法在Rails5.1被命为是form_for和form_tag两个方法的合并版本-->
+<%= form_with(model: order, local: true) do |form| %>
+  <% if order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+      <% order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, size: 40 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_area :address, rows: 3, cols: 40 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, size: 40 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pay_type %>
+<!--    这里传入的枚举(pay_types)需要使用复数形式-->
+    <%= form.select :pay_type, Order.pay_types.keys, prompt: 'Select a payment method' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Place Order' %>
+  </div>
+<% end %>
