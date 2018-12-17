@@ -1,4 +1,5 @@
 class CartsController < ApplicationController
+  skip_before_action :authorize, only: [:create, :update, :destroy]
   before_action :set_cart, only: [:show, :edit, :update, :destroy]
   # 一旦接收到无效的URL，例如http://.../cart/some_invalid_id
   # 导致引发ActiveRecord::RecordNotFound异常，就会被拦截并触发回调函数

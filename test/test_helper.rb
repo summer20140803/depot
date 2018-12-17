@@ -7,4 +7,31 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  # def login_as(user)
+  #   post login_url, params: { name: user.name, password: 'secret' }
+  # end
+  #
+  # def logout
+  #   delete logout_url
+  # end
+  #
+  # # 测试环境下默认执行，当定义了session的情况下，才会调用login_as()
+  # def setup
+  #   login_as users(:one)
+  # end
+end
+
+class ActionDispatch::IntegrationTest
+  def login_as(user)
+    post login_url, params: { name: user.name, password: 'secret' }
+  end
+
+  def logout
+    delete logout_url
+  end
+
+  # 测试环境下默认执行，当定义了session的情况下，才会调用login_as()
+  def setup
+    login_as users(:one)
+  end
 end
