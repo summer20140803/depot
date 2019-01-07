@@ -9,7 +9,9 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all
+    # page(3).per(50) 代表第三页，每页显示50条
+    # 分页功能来自 kaminari gem
+    @orders = Order.order('created_at desc').page(params[:page]).per(5)
   end
 
   # GET /orders/1

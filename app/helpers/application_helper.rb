@@ -1,3 +1,4 @@
+# 这里可以存放一些全局的自定义的视图辅助方法，如若只是专用视图用，请放到对应模块的 *_helper.rb文件中
 module ApplicationHelper
   def hidden_div_if(condition, attributes = {}, &block)
     if condition
